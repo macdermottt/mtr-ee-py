@@ -78,7 +78,7 @@ def createMtrRaster( year ):
     MaskOutput = blankMask.where(MaskVal.gt(0), 1) 
     MaskResult = MaskOutput.mask(MaskOutput) 
 
-    masklayer_reverse = MaskOutput.mask( MaskOutput.bitwiseNot() )
+    masklayer_reverse = MaskOutput.mask( MaskOutput.Not() )
 
     # Paint mine permit feature collections onto the reverse mask
 
@@ -86,7 +86,7 @@ def createMtrRaster( year ):
 
     # Select low-NDVI value areas that are within the reverse mask
 
-    MTRresult = LowNDVIresult.bitwiseAnd(masklayer)
+    MTRresult = LowNDVIresult.And(masklayer)
     
     return MTRresult
 
