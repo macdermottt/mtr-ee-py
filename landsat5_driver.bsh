@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# you should run this with "caffeinate" on OSX 10.9
+# example:
+# caffeinate -i ./landsat5_driver.bsh
+#
+
+year=1984
+
+startfile="county_list.txt"
+missedfile="missed_counties.txt"
+retryfile="retry.txt"
+trys=3
+
+while read c; do
+    python landsat5.py $c $year
+done < $startfile
+
+while [ -f $missedfile ]  && (( $trys > 0 )); do
+
+    echo "trys left: $trys"
+
+    cat $missedfile > $retryfile
+    rm -f $missedfile
+
+    while read c; do
+        python landsat5.py $c $year
+    done < $retryfile
+
+    trys=$(( $trys - 1 ))
+
+done
+
+
